@@ -26,4 +26,11 @@ public class FinancialEntry {
 
     @Column(name = "note")
     private String note;
+
+    @Override
+    public String toString() {
+        return "[FinancialEntry: id = " + id + ", date = " + date.toString()
+                + ", amount = " + amount + ", category = " + category.toString()
+                + ", note = " + note + "]";
+    }
 }
