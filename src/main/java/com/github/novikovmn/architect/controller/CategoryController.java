@@ -18,9 +18,6 @@ public class CategoryController {
 
     @GetMapping({"", "/"})
     public void categoryList() {
-        List<Category> categories = categoryService.getAll();
-        for (Category category : categories) {
-            System.out.println(category.toString());
-        }
+        categoryService.getAll().stream().forEach(System.out::println);
     }
 }

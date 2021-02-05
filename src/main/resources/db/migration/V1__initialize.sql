@@ -26,6 +26,16 @@ insert into categories
     ('Колымы', 1),
     ('Вклад', 1);
 
+drop table if exists currencies cascade;
+create table currencies (
+    charcode            varchar(3),
+    symbol              varchar(1),
+    primary key (charcode)
+);
+insert into currencies
+    (charcode, symbol) values
+    ('RUR', '₽');
+
 drop table if exists financial_entries cascade;
 create table financial_entries (
     id          bigserial,
