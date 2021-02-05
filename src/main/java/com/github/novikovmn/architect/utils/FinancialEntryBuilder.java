@@ -2,27 +2,24 @@ package com.github.novikovmn.architect.utils;
 
 import com.github.novikovmn.architect.domain.Category;
 import com.github.novikovmn.architect.domain.FinancialEntry;
-import lombok.Setter;
 
 import java.util.Date;
 
-@Setter
-public class FinancialEntryBuilder {
-    private Date date;
-    private int amount;
-    private Category category;
-    private String note;
+/**
+ * Общий интерфейс построителя записей финансовой отчётности
+ */
+public interface FinancialEntryBuilder {
 
-    public FinancialEntry getEntry() throws Exception {
-        if (date == null) { throw new Exception("Дата не указана"); }
-        if (amount == 0) { throw new Exception("Сумма не указана"); }
-        if (category == null) { throw new Exception("Категория не указана"); }
-        if (note == null) { note = ""; }
-        FinancialEntry financialEntry = new FinancialEntry();
-        financialEntry.setDate(date);
-        financialEntry.setAmount(amount);
-        financialEntry.setCategory(category);
-        financialEntry.setNote(note);
-        return financialEntry;
-    }
+    // Сеттеры для ввода данных, на базе которых будет построена новая запись
+    void setDate(Date date);
+    void setAmount(int amount);
+    void setCategory(Category category);
+    void setNote(String note);
+
+    /**
+     * Билдер записи финансовой отчётности
+     * @return Новая запись
+     * @throws Exception Если не все требуемые данные были введены
+     */
+    FinancialEntry getEntry() throws Exception;
 }

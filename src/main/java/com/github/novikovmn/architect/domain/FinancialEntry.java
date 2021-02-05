@@ -29,8 +29,8 @@ public class FinancialEntry {
 
     @Override
     public String toString() {
-        return "[FinancialEntry: id = " + id + ", date = " + date.toString()
-                + ", amount = " + amount + ", category = " + category.toString()
-                + ", note = " + note + "]";
+        return "FinancialEntry(id=" + id + ", date=" + date.toString()
+                + ", amount=" + amount + ", category=" + category.toString()
+                + ", note=" + note + ")";
     }
 }

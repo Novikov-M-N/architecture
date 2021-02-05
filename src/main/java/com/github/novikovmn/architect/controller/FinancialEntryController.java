@@ -1,8 +1,7 @@
 package com.github.novikovmn.architect.controller;
 
-import com.github.novikovmn.architect.domain.FinancialEntry;
 import com.github.novikovmn.architect.repository.CategoryRepository;
-import com.github.novikovmn.architect.utils.FinancialEntryBuilder;
+import com.github.novikovmn.architect.utils.SimpleFinancialEntryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +17,7 @@ public class FinancialEntryController {
 
     @GetMapping({"", "/"})
     public void newEntry() {
-        FinancialEntryBuilder builder = new FinancialEntryBuilder();
+        SimpleFinancialEntryBuilder builder = new SimpleFinancialEntryBuilder();
         builder.setDate(new Date());
         builder.setAmount(100);
         builder.setCategory(categoryRepository.findById(1).get());
