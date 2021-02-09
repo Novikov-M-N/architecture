@@ -2,6 +2,7 @@ package com.github.novikovmn.architect.utils;
 
 import com.github.novikovmn.architect.domain.Category;
 import com.github.novikovmn.architect.domain.FinancialEntry;
+import com.github.novikovmn.architect.domain.Money;
 
 import java.util.Date;
 
@@ -19,7 +20,7 @@ public class LoggedFinancialEntryBuilder implements FinancialEntryBuilder{
     @Override
     public void setDate(Date date) { builder.setDate(date); }
     @Override
-    public void setAmount(int amount) { builder.setAmount(amount); }
+    public void setMoney(Money money) { builder.setMoney(money); }
     @Override
     public void setCategory(Category category) { builder.setCategory(category); }
     @Override

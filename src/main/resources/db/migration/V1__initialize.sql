@@ -28,21 +28,41 @@ insert into categories
 
 drop table if exists currencies cascade;
 create table currencies (
+    id                  int auto_increment,
     charcode            varchar(3),
     symbol              varchar(1),
-    primary key (charcode)
+    rate                numeric,
+    primary key (id)
 );
 insert into currencies
-    (charcode, symbol) values
-    ('RUR', '₽');
+    (charcode, symbol, rate) values
+    ('RUR', '₽', 1),
+    ('USD', '$', 74.65),
+    ('EUR', '€', 89.95);
+
+drop table if exists moneys cascade;
+create table moneys (
+    id                  bigserial,
+    amount              numeric(8,2),
+    currency            int,
+    primary key(id),
+    foreign key (currency) references currencies(id)
+);
+
+insert into moneys
+    (amount, currency) values
+    (100.25, 1),
+    (120.11, 2),
+    (61.23, 3);
 
 drop table if exists financial_entries cascade;
 create table financial_entries (
     id          bigserial,
     date        date,
-    amount      int,
+    money       bigint,
     category    int,
     note        varchar(255),
     primary key(id),
-    foreign key (category) references categories(id)
+    foreign key (category) references categories(id),
+    foreign key (money) references moneys(id)
 );

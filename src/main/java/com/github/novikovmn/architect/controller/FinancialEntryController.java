@@ -15,17 +15,17 @@ public class FinancialEntryController {
     @Autowired
     CategoryRepository categoryRepository;
 
-    @GetMapping({"", "/"})
-    public void newEntry() {
-        SimpleFinancialEntryBuilder builder = new SimpleFinancialEntryBuilder();
-        builder.setDate(new Date());
-        builder.setAmount(100);
-        builder.setCategory(categoryRepository.findById(1).get());
-        builder.setNote("Тестовая запись");
-        try {
-            System.out.println(builder.getEntry().toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    @GetMapping({"", "/"})
+//    public void newEntry() {
+//        SimpleFinancialEntryBuilder builder = new SimpleFinancialEntryBuilder();
+//        builder.setDate(new Date());
+//        builder.setAmount(100);
+//        builder.setCategory(categoryRepository.findById(1).get());
+//        builder.setNote("Тестовая запись");
+//        try {
+//            System.out.println(builder.getEntry().toString());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

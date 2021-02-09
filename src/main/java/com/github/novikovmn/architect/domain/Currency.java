@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 
 @Data
 @Entity
@@ -13,13 +14,17 @@ import javax.persistence.Table;
 public class Currency {
 
     @Id
+    @Column(name = "id")
+    private Integer id;
     @Column(name = "charcode")
     private String charCode;
     @Column(name = "symbol")
     private String symbol;
+    @Column(name = "rate")
+    private BigDecimal rate;
 
     @Override
     public String toString() {
-        return "Currency(charCode=" + charCode + ", symbol=" + symbol + ")";
+        return "Currency(id=" + id + ", charCode=" + charCode + ", symbol=" + symbol + ")";
     }
 }
