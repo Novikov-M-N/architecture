@@ -21,7 +21,7 @@ public class Money {
     @Column(name = "amount")
     private BigDecimal amount;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "currency")
     private Currency currency;
 

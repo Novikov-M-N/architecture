@@ -5,10 +5,14 @@ import com.github.novikovmn.architect.domain.FinancialEntry;
 import com.github.novikovmn.architect.domain.Money;
 import com.github.novikovmn.architect.repository.CategoryRepository;
 import com.github.novikovmn.architect.repository.CurrencyRepository;
-import com.github.novikovmn.architect.repository.FinancialEntryRepository;
 import com.github.novikovmn.architect.repository.MoneyRepository;
+import com.github.novikovmn.architect.service.FinancialEntryService;
 import com.github.novikovmn.architect.utils.FinancialEntryBuilder;
+import com.github.novikovmn.architect.utils.FinancialEntryDataClass;
 import com.github.novikovmn.architect.utils.LoggedFinancialEntryBuilder;
+import com.github.novikovmn.architect.utils.commands.Command;
+import com.github.novikovmn.architect.utils.commands.CreateFinancialEntryCommand;
+import com.github.novikovmn.architect.utils.commands.DeleteFinancialEntryCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +35,7 @@ public class DebugController {
     @Autowired
     private MoneyRepository moneyRepository;
     @Autowired
-    private FinancialEntryRepository financialEntryRepository;
+    private FinancialEntryService financialEntryService;
 
     // Проверка корректного взаимодействия с сущностью типа "валюта" в БД.
     @GetMapping({"currency", "currency/"})
@@ -54,7 +58,7 @@ public class DebugController {
         builder.setNote("Тестовая логируемая запись");
         try {
             FinancialEntry entry = builder.getEntry();
-            financialEntryRepository.save(entry);
+            financialEntryService.save(entry);
             entryId = entry.getId();
             System.out.println(entry);
             entry.getMoney().toCurrency(currencyRepository.findByCharCode("USD"));
@@ -76,5 +80,49 @@ public class DebugController {
             }
             System.out.println();
         }
+    }
+
+    // Проверка работоспособности команд на создание и удаление записи финансовой отчётности.
+    @GetMapping({"command", "command/"})
+    public void commandSimulation() {
+
+        // Создаём первую запись через команду
+        Money money = new Money();
+        money.setAmount(BigDecimal.valueOf(121.48));
+        money.setCurrency(currencyRepository.findByCharCode("USD"));
+        moneyRepository.save(money);
+        FinancialEntryDataClass template = new FinancialEntryDataClass(
+                new Date(),
+                money,
+                categoryRepository.findById(1).get(),
+                "Тестовая запись №1, созданная через команду"
+        );
+        Command createCommand = new CreateFinancialEntryCommand(template, financialEntryService);
+        createCommand.execute();
+
+        // Создаём вторую запись через команду
+        money = new Money();
+        money.setAmount(BigDecimal.valueOf(500));
+        money.setCurrency(currencyRepository.findByCharCode("RUR"));
+        moneyRepository.save(money);
+        template = new FinancialEntryDataClass(
+                new Date(),
+                money,
+                categoryRepository.findById(2).get(),
+                "Тестовая запись №2, созданная через команду"
+        );
+        createCommand = new CreateFinancialEntryCommand(template, financialEntryService);
+        createCommand.execute();
+
+        //Убеждаемся, что записи были внесены в БД
+        financialEntryService.findAll().stream().forEach(System.out::println);
+
+        //Удаляем первую запись
+        FinancialEntry entry = financialEntryService.findById(1L);
+        Command deleteCommand = new DeleteFinancialEntryCommand(entry, financialEntryService);
+        deleteCommand.execute();
+
+        //Убеждаемся, что запсь была удалена из БД
+        financialEntryService.findAll().stream().forEach(System.out::println);
     }
 }
