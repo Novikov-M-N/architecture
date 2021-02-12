@@ -1,9 +1,11 @@
 package com.github.novikovmn.architect.controller;
 
+import com.github.novikovmn.architect.domain.CategoryType;
 import com.github.novikovmn.architect.domain.Currency;
 import com.github.novikovmn.architect.domain.FinancialEntry;
 import com.github.novikovmn.architect.domain.Money;
 import com.github.novikovmn.architect.repository.CategoryRepository;
+import com.github.novikovmn.architect.repository.CategoryTypeRepository;
 import com.github.novikovmn.architect.repository.CurrencyRepository;
 import com.github.novikovmn.architect.repository.MoneyRepository;
 import com.github.novikovmn.architect.service.FinancialEntryService;
@@ -13,6 +15,8 @@ import com.github.novikovmn.architect.utils.LoggedFinancialEntryBuilder;
 import com.github.novikovmn.architect.utils.commands.Command;
 import com.github.novikovmn.architect.utils.commands.CreateFinancialEntryCommand;
 import com.github.novikovmn.architect.utils.commands.DeleteFinancialEntryCommand;
+import com.github.novikovmn.architect.utils.datamapper.CategoryDataMapper;
+import com.github.novikovmn.architect.utils.datamapper.CategoryTypeDataMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +40,8 @@ public class DebugController {
     private MoneyRepository moneyRepository;
     @Autowired
     private FinancialEntryService financialEntryService;
+    @Autowired
+    private CategoryTypeRepository categoryTypeRepository;
 
     // Проверка корректного взаимодействия с сущностью типа "валюта" в БД.
     @GetMapping({"currency", "currency/"})
@@ -124,5 +130,37 @@ public class DebugController {
 
         //Убеждаемся, что запсь была удалена из БД
         financialEntryService.findAll().stream().forEach(System.out::println);
+    }
+
+    // Проверка работы дата мапперов
+    @GetMapping({"mapper", "mapper/"})
+    public void mappers() {
+        CategoryTypeDataMapper categoryTypeDataMapper = new CategoryTypeDataMapper();
+        categoryTypeDataMapper.getAll().stream().forEach(System.out::println);
+
+        System.out.println(categoryTypeDataMapper.getById(1));
+
+        System.out.println(categoryTypeDataMapper.getByTitle("EXPENSE"));
+
+        CategoryDataMapper categoryDataMapper = new CategoryDataMapper();
+        categoryDataMapper.getAll().stream().forEach(System.out::println);
+
+        System.out.println(categoryDataMapper.getById(1));
+
+        System.out.println(categoryDataMapper.getByTitle("Зарплата основная"));
+
+        CategoryType categoryType = new CategoryType();
+        categoryType.setTitle("TEST");
+        categoryTypeDataMapper.insert(categoryType);
+        categoryTypeDataMapper.getAll().stream().forEach(System.out::println);
+
+        categoryType = categoryTypeDataMapper.getById(1);
+        categoryType.setTitle("TEST");
+        categoryTypeDataMapper.update(categoryType);
+        categoryTypeDataMapper.getAll().stream().forEach(System.out::println);
+
+        categoryType = categoryTypeDataMapper.getById(3);
+        categoryTypeDataMapper.delete(categoryType);
+        categoryTypeDataMapper.getAll().stream().forEach(System.out::println);
     }
 }
