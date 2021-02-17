@@ -28,7 +28,8 @@ public class SimpleFinancialEntryBuilder implements FinancialEntryBuilder {
      */
     @Override
     public FinancialEntry getEntry() throws Exception {
-        if (date == null) { throw new Exception("Дата не указана"); }
+        // Если дата не указана, она заполняется текущей датой.
+        if (date == null) { date = new Date(); }
         if (money == null) { throw new Exception("Сумма не указана"); }
         if (category == null) { throw new Exception("Категория не указана"); }
         // Примечание не является обязательным полем. Если оно не указано, оно создаётся пустым.

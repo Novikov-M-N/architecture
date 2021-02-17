@@ -8,7 +8,7 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "financial_entries")
-public class FinancialEntry {
+public class FinancialEntry extends Domain {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

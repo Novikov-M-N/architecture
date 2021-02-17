@@ -13,11 +13,13 @@ import java.math.RoundingMode;
 @Data
 @Entity
 @Table(name = "moneys")
-public class Money {
+public class Money extends Domain {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
     @Column(name = "amount")
     private BigDecimal amount;
 
