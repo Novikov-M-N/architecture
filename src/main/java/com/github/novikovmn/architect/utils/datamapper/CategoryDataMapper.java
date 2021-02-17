@@ -1,19 +1,30 @@
 package com.github.novikovmn.architect.utils.datamapper;
 
 import com.github.novikovmn.architect.domain.Category;
-import com.github.novikovmn.architect.domain.CategoryType;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
-public class CategoryDataMapper extends DataMapper{
-    private final String SQL = "SELECT * FROM categories ";
+public class CategoryDataMapper extends DataMapper<Category, Integer>{
+    private final String TABLE = super.getTABLE();
+    private final String SQL_SELECT = super.getSQL_SELECT();
+    private final String SQL_INSERT = "INSERT INTO " + TABLE + " (title, type) values (?, ?)";
+    private final String SQL_UPDATE = "UPDATE " + TABLE + " SET title = ?, type = ? WHERE id = ?";
 
-    private CategoryTypeDataMapper categoryTypeDataMapper = new CategoryTypeDataMapper();
+    private static CategoryDataMapper instance;
 
-    private Category create(ResultSet resultSet) throws SQLException {
+    public static CategoryDataMapper getInstance() {
+        if (instance == null) instance = new CategoryDataMapper();
+        return instance;
+    }
+
+    private CategoryDataMapper() {
+        super("categories");
+    }
+
+    private final CategoryTypeDataMapper categoryTypeDataMapper = CategoryTypeDataMapper.getInstance();
+
+    protected Category create(ResultSet resultSet) throws SQLException {
         Category category = new Category();
         category.setId(resultSet.getInt("id"));
         category.setTitle(resultSet.getString("title"));
@@ -21,34 +32,32 @@ public class CategoryDataMapper extends DataMapper{
         return category;
     }
 
-    public List<Category> getAll() {
-        List<Category> result = new ArrayList<>();
-        try(var resultSet = super.getStatement().executeQuery(SQL)) {
-            while (resultSet.next()) {
-                result.add(create(resultSet));
-            }
+    @Override
+    public void insert(Category domain) {
+        try (var statement = super.getPreparedStatement(SQL_INSERT)) {
+            statement.setString(1, domain.getTitle());
+            statement.setInt(2, domain.getType().getId());
+            statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return result;
     }
 
-    public Category getById(Integer id) {
-        Category category = null;
-        try (var statement = super.getPreparedStatement(SQL + "WHERE id = ?")) {
-            statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
-            category = create(resultSet);
+    @Override
+    public void update(Category domain) {
+        try (var statement = super.getPreparedStatement(SQL_UPDATE)) {
+            statement.setString(1, domain.getTitle());
+            statement.setInt(2, domain.getType().getId());
+            statement.setInt(3, domain.getId());
+            statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return category;
     }
 
     public Category getByTitle(String title) {
         Category category = null;
-        try (var statement = super.getPreparedStatement(SQL + "WHERE title = ?")) {
+        try (var statement = super.getPreparedStatement(SQL_SELECT + "WHERE title = ?")) {
             statement.setString(1, title);
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();

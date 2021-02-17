@@ -29,13 +29,13 @@ insert into categories
 drop table if exists currencies cascade;
 create table currencies (
     id                  int auto_increment,
-    charcode            varchar(3),
+    char_code            varchar(3),
     symbol              varchar(1),
     rate                numeric,
     primary key (id)
 );
 insert into currencies
-    (charcode, symbol, rate) values
+    (char_code, symbol, rate) values
     ('RUR', '₽', 1),
     ('USD', '$', 74.65),
     ('EUR', '€', 89.95);

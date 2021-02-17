@@ -10,7 +10,7 @@ import javax.persistence.Table;
 @Data
 @Entity
 @Table(name = "category_types")
-public class CategoryType{
+public class CategoryType extends Domain{
     @Id
     @Column(name = "id")
     private Integer id;
